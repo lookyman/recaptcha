@@ -16,7 +16,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $loader = new RobotLoader;
 $loader->autoRebuild = true;
 $loader->setCacheStorage(new DevNullStorage)
-	->addDirectory(__DIR__ . '/../src')
 	->addDirectory(__DIR__)
 	->register();
 
