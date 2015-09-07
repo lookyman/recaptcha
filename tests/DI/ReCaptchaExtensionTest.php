@@ -150,7 +150,7 @@ Nette\Forms\Container::extensionMethod(\'addReCaptcha\', function (Nette\Forms\C
 	$container[$name]->addRule([$self->getService(\'recaptcha.validator\'), \'validateControl\'], $self->getService(\'recaptcha.configuration\')->getErrorMessage());
 	return $container[$name];
 });
-', str_replace(["\r\n", "\n\r", "\r", "\n"], "\n", $initialize->getBody()));
+', $initialize->getBody());
 	}
 
 	/**
