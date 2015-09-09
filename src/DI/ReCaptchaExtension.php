@@ -10,7 +10,7 @@
 
 namespace lookyman\ReCaptcha\DI;
 
-use lookyman\ReCaptcha\Configuration;
+use lookyman\ReCaptcha\Config;
 use lookyman\ReCaptcha\Client\GuzzleClient;
 use lookyman\ReCaptcha\Client\IClient;
 use lookyman\ReCaptcha\Validator;
@@ -49,8 +49,8 @@ class ReCaptchaExtension extends CompilerExtension
 		Validators::assertField($config, 'errorMessage', 'string');
 		Validators::assertField($config, 'validateRemoteIp', 'bool');
 
-		$builder->addDefinition($this->prefix('configuration'))
-			->setClass(Configuration::class, [
+		$builder->addDefinition($this->prefix('config'))
+			->setClass(Config::class, [
 				$config['siteKey'],
 				$config['secretKey'],
 				$config['verificationUrl'],
@@ -67,7 +67,7 @@ class ReCaptchaExtension extends CompilerExtension
 			->setAutowired(FALSE);
 
 		$builder->addDefinition($this->prefix('validator'))
-			->setClass(Validator::class, [$this->prefix('@configuration'), $this->prefix('@client')])
+			->setClass(Validator::class, [$this->prefix('@config'), $this->prefix('@client')])
 			->setAutowired(FALSE);
 	}
 
@@ -80,7 +80,7 @@ Nette\Forms\Container::extensionMethod(\'addReCaptcha\', function (Nette\Forms\C
 	$container[$name]->addRule([$self->getService(?), \'validateControl\'], $self->getService(?)->getErrorMessage());
 	return $container[$name];
 });',
-			[$this->prefix('configuration'), $this->prefix('validator'), $this->prefix('configuration')]
+			[$this->prefix('config'), $this->prefix('validator'), $this->prefix('config')]
 		);
 	}
 

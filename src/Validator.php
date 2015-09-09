@@ -26,8 +26,8 @@ use Nette\Utils\Json;
 class Validator extends Object
 {
 
-	/** @var \lookyman\ReCaptcha\Configuration */
-	private $configuration;
+	/** @var \lookyman\ReCaptcha\Config */
+	private $config;
 
 	/** @var \lookyman\ReCaptcha\Client\IClient */
 	private $client;
@@ -35,9 +35,9 @@ class Validator extends Object
 	/** @var \Nette\Http\IRequest */
 	private $request;
 
-	public function __construct(Configuration $configuration, IClient $client, IRequest $request)
+	public function __construct(Config $config, IClient $client, IRequest $request)
 	{
-		$this->configuration = $configuration;
+		$this->config = $config;
 		$this->client = $client;
 		$this->request = $request;
 	}
@@ -55,10 +55,10 @@ class Validator extends Object
 
 		try {
 			$response = $this->client->validate(
-				$this->configuration->getVerificationUrl(),
-				$this->configuration->getSecretKey(),
+				$this->config->getVerificationUrl(),
+				$this->config->getSecretKey(),
 				$control->getValue(),
-				$this->configuration->getValidateRemoteIp()
+				$this->config->getValidateRemoteIp()
 					? $this->request->getRemoteAddress()
 					: NULL
 			);

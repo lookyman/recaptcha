@@ -10,25 +10,25 @@
 
 namespace lookyman\ReCaptcha\Tests;
 
-use lookyman\ReCaptcha\Configuration;
+use lookyman\ReCaptcha\Config;
 use Nette\Utils\AssertionException;
 
 /**
- * Test \lookyman\ReCaptcha\Configuration.
+ * Test \lookyman\ReCaptcha\Config.
  *
  * @author Lukáš Unger <looky.msc@gmail.com>
  */
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigTest extends \PHPUnit_Framework_TestCase
 {
 
 	public function testGetSet()
 	{
-		$configuration = new Configuration('a', 'b', 'c', 'd', TRUE);
-		$this->assertSame('a', $configuration->getSiteKey());
-		$this->assertSame('b', $configuration->getSecretKey());
-		$this->assertSame('c', $configuration->getVerificationUrl());
-		$this->assertSame('d', $configuration->getErrorMessage());
-		$this->assertSame(TRUE, $configuration->getValidateRemoteIp());
+		$config = new Config('a', 'b', 'c', 'd', TRUE);
+		$this->assertSame('a', $config->getSiteKey());
+		$this->assertSame('b', $config->getSecretKey());
+		$this->assertSame('c', $config->getVerificationUrl());
+		$this->assertSame('d', $config->getErrorMessage());
+		$this->assertSame(TRUE, $config->getValidateRemoteIp());
 	}
 
 	/**
@@ -37,7 +37,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 	public function testInvalidArguments($siteKey, $secretKey, $verificationUrl, $errorMessage, $validateRemoteIp, $exceptionClass, $exceptionMessage)
 	{
 		$this->setExpectedException($exceptionClass, $exceptionMessage);
-		new Configuration($siteKey, $secretKey, $verificationUrl, $errorMessage, $validateRemoteIp);
+		new Config($siteKey, $secretKey, $verificationUrl, $errorMessage, $validateRemoteIp);
 	}
 
 	public function invalidArgumentsDataProvider()

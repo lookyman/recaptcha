@@ -11,7 +11,7 @@
 namespace lookyman\ReCaptcha\Tests;
 
 use lookyman\ReCaptcha\Client\IClient;
-use lookyman\ReCaptcha\Configuration;
+use lookyman\ReCaptcha\Config;
 use lookyman\ReCaptcha\Forms\Controls\ReCaptchaControl;
 use lookyman\ReCaptcha\Validator;
 use Nette\Http\IRequest;
@@ -28,16 +28,16 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
 	public function testValidateControl()
 	{
-		$configuration = $this->getMockBuilder(Configuration::class)
+		$config = $this->getMockBuilder(Config::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$configuration->expects($this->once())
+		$config->expects($this->once())
 			->method('getVerificationUrl')
 			->will($this->returnValue('a'));
-		$configuration->expects($this->once())
+		$config->expects($this->once())
 			->method('getSecretKey')
 			->will($this->returnValue('b'));
-		$configuration->expects($this->once())
+		$config->expects($this->once())
 			->method('getValidateRemoteIp')
 			->will($this->returnValue(TRUE));
 
@@ -73,7 +73,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 			->method('getRemoteAddress')
 			->will($this->returnValue('d'));
 
-		$validator = new Validator($configuration, $client, $request);
+		$validator = new Validator($config, $client, $request);
 
 		$unfilled = $this->getMockBuilder(ReCaptchaControl::class)
 			->disableOriginalConstructor()

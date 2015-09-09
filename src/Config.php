@@ -18,7 +18,7 @@ use Nette\Utils\Validators;
  *
  * @author Lukáš Unger <looky.msc@gmail.com>
  */
-class Configuration extends Object
+class Config extends Object
 {
 
 	/** @var string */

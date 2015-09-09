@@ -10,7 +10,7 @@
 
 namespace lookyman\ReCaptcha\Tests\DI;
 
-use lookyman\ReCaptcha\Configuration;
+use lookyman\ReCaptcha\Config;
 use lookyman\ReCaptcha\Client\GuzzleClient;
 use lookyman\ReCaptcha\Client\IClient;
 use lookyman\ReCaptcha\DI\ReCaptchaExtension;
@@ -45,7 +45,7 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 	public function disabledAutowiringDataProvider()
 	{
 		return [
-			[Configuration::class],
+			[Config::class],
 			[IClient::class],
 			[Validator::class],
 		];
@@ -63,12 +63,12 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 			],
 		]));
 
-		$this->assertInstanceOf(Configuration::class, $configuration = $container->getService('recaptcha.configuration'));
+		$this->assertInstanceOf(Config::class, $config = $container->getService('recaptcha.config'));
 
-		$this->assertSame('a', $configuration->getSiteKey());
-		$this->assertSame('b', $configuration->getSecretKey());
-		$this->assertSame('c', $configuration->getVerificationUrl());
-		$this->assertSame('d', $configuration->getErrorMessage());
+		$this->assertSame('a', $config->getSiteKey());
+		$this->assertSame('b', $config->getSecretKey());
+		$this->assertSame('c', $config->getVerificationUrl());
+		$this->assertSame('d', $config->getErrorMessage());
 
 		$this->assertInstanceOf(GuzzleClient::class, $client = $container->getService('recaptcha.client'));
 
@@ -80,9 +80,9 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf(Validator::class, $validator = $container->getService('recaptcha.validator'));
 
 		$ref = new \ReflectionClass($validator);
-		$prop = $ref->getProperty('configuration');
+		$prop = $ref->getProperty('config');
 		$prop->setAccessible(TRUE);
-		$this->assertSame($configuration, $prop->getValue($validator));
+		$this->assertSame($config, $prop->getValue($validator));
 
 		$ref = new \ReflectionClass($validator);
 		$prop = $ref->getProperty('client');
@@ -146,8 +146,8 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame('$self = $this;
 Nette\Forms\Container::extensionMethod(\'addReCaptcha\', function (Nette\Forms\Container $container, $name, $label = NULL) use ($self) {
-	$container[$name] = new lookyman\ReCaptcha\Forms\Controls\ReCaptchaControl($self->getService(\'recaptcha.configuration\')->getSiteKey(), $label);
-	$container[$name]->addRule([$self->getService(\'recaptcha.validator\'), \'validateControl\'], $self->getService(\'recaptcha.configuration\')->getErrorMessage());
+	$container[$name] = new lookyman\ReCaptcha\Forms\Controls\ReCaptchaControl($self->getService(\'recaptcha.config\')->getSiteKey(), $label);
+	$container[$name]->addRule([$self->getService(\'recaptcha.validator\'), \'validateControl\'], $self->getService(\'recaptcha.config\')->getErrorMessage());
 	return $container[$name];
 });
 ', $initialize->getBody());
