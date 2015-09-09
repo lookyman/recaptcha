@@ -29,9 +29,10 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
 		$client = $this->getMock(Client::class);
 		$client->expects($this->once())
 			->method('__call')
-			->with('post', $data);
+			->with('post', $data)
+			->will($this->returnValue(TRUE));
 
-		call_user_func_array([new GuzzleClient($client), 'validate'], $args);
+		$this->assertTrue(call_user_func_array([new GuzzleClient($client), 'validate'], $args));
 	}
 
 	public function validateDataProvider()
