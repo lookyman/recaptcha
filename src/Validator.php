@@ -69,7 +69,7 @@ class Validator extends Object
 
 		$code = $response->getStatusCode();
 		if ($code !== 200) {
-			throw new BadResponseException('The verification API did not responded correctly.', $code);
+			throw new BadResponseException('The verification API did not respond correctly.', $code);
 		}
 		$answer = Json::decode($response->getBody()->getContents());
 		return isset($answer->success) && $answer->success === TRUE;
