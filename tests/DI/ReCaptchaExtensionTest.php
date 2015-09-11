@@ -32,25 +32,6 @@ use Nette\Utils\AssertionException;
 class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 {
 
-	/**
-	 * @dataProvider disabledAutowiringDataProvider
-	 * @expectedException \Nette\DI\MissingServiceException
-	 */
-	public function testDisabledAutowiring($class)
-	{
-		$this->createContainer($this->getDefaultConfig())
-			->getByType($class);
-	}
-
-	public function disabledAutowiringDataProvider()
-	{
-		return [
-			[Config::class],
-			[IClient::class],
-			[Validator::class],
-		];
-	}
-
 	public function testServices()
 	{
 		$container = $this->createContainer(Helpers::merge($this->getDefaultConfig(), [
@@ -63,21 +44,21 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 			],
 		]));
 
-		$this->assertInstanceOf(Config::class, $config = $container->getService('recaptcha.config'));
+		$this->assertInstanceOf(Config::class, $config = $container->getByType(Config::class));
 
 		$this->assertSame('a', $config->getSiteKey());
 		$this->assertSame('b', $config->getSecretKey());
 		$this->assertSame('c', $config->getVerificationUrl());
 		$this->assertSame('d', $config->getErrorMessage());
 
-		$this->assertInstanceOf(GuzzleClient::class, $client = $container->getService('recaptcha.client'));
+		$this->assertInstanceOf(GuzzleClient::class, $client = $container->getByType(IClient::class));
 
 		$ref = new \ReflectionClass($client);
 		$prop = $ref->getProperty('client');
 		$prop->setAccessible(TRUE);
 		$this->assertInstanceOf(Client::class, $prop->getValue($client));
 
-		$this->assertInstanceOf(Validator::class, $validator = $container->getService('recaptcha.validator'));
+		$this->assertInstanceOf(Validator::class, $validator = $container->getByType(Validator::class));
 
 		$ref = new \ReflectionClass($validator);
 		$prop = $ref->getProperty('config');

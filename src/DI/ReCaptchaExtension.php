@@ -56,19 +56,16 @@ class ReCaptchaExtension extends CompilerExtension
 				$config['verificationUrl'],
 				$config['errorMessage'],
 				$config['validateRemoteIp'],
-			])
-			->setAutowired(FALSE);
+			]);
 
 		Validators::assertField($config, 'client', 'array');
 
 		$builder->addDefinition($this->prefix('client'))
 			->setClass(IClient::class)
-			->setFactory(GuzzleClient::class, [new Statement(Client::class, [$config['client']])])
-			->setAutowired(FALSE);
+			->setFactory(GuzzleClient::class, [new Statement(Client::class, [$config['client']])]);
 
 		$builder->addDefinition($this->prefix('validator'))
-			->setClass(Validator::class, [$this->prefix('@config'), $this->prefix('@client')])
-			->setAutowired(FALSE);
+			->setClass(Validator::class);
 	}
 
 	public function afterCompile(ClassType $class)
