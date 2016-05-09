@@ -47,6 +47,9 @@ recaptcha:
 	errorMessage: 'You appear to be a bot'
 	validateRemoteIp: off
 	client: []
+	theme: 'light'
+	type: 'image'
+	size: 'normal'
 ```
 
 You can get your `siteKey` and `secretKey` at the [Google reCAPTCHA](https://www.google.com/recaptcha/intro/index.html) admin page.
