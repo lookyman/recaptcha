@@ -27,6 +27,18 @@ use Nette\Utils\Validators;
  */
 class ReCaptchaExtension extends CompilerExtension
 {
+	/* Themes */
+	const DARK = "dark";
+	const LIGHT = "light";
+
+	/* Type */
+	const AUDIO = "audio";
+	const IMAGE = "image";
+
+	/* Size */
+	const COMPACT = "compact";
+	const NORMAL = "normal";
+
 
 	/** @var array */
 	public $defaults = [
@@ -36,6 +48,9 @@ class ReCaptchaExtension extends CompilerExtension
 		'errorMessage' => 'You appear to be a bot',
 		'validateRemoteIp' => FALSE,
 		'client' => [],
+		'theme' => self::LIGHT,
+		'type' => self::IMAGE,
+		'size' => self::NORMAL,
 	];
 
 	public function loadConfiguration()
@@ -48,6 +63,9 @@ class ReCaptchaExtension extends CompilerExtension
 		Validators::assertField($config, 'verificationUrl', 'string');
 		Validators::assertField($config, 'errorMessage', 'string');
 		Validators::assertField($config, 'validateRemoteIp', 'bool');
+		Validators::assertField($config, 'theme', 'string');
+		Validators::assertField($config, 'type', 'string');
+		Validators::assertField($config, 'size', 'string');
 
 		$builder->addDefinition($this->prefix('config'))
 			->setClass(Config::class, [
@@ -56,16 +74,22 @@ class ReCaptchaExtension extends CompilerExtension
 				$config['verificationUrl'],
 				$config['errorMessage'],
 				$config['validateRemoteIp'],
-			]);
+				$config['theme'],
+				$config['type'],
+				$config['size'],
+			])
+			->setAutowired(FALSE);
 
 		Validators::assertField($config, 'client', 'array');
 
 		$builder->addDefinition($this->prefix('client'))
 			->setClass(IClient::class)
-			->setFactory(GuzzleClient::class, [new Statement(Client::class, [$config['client']])]);
+			->setFactory(GuzzleClient::class, [new Statement(Client::class, [$config['client']])])
+			->setAutowired(FALSE);
 
 		$builder->addDefinition($this->prefix('validator'))
-			->setClass(Validator::class);
+			->setClass(Validator::class, [$this->prefix('@config'), $this->prefix('@client')])
+			->setAutowired(FALSE);
 	}
 
 	public function afterCompile(ClassType $class)
@@ -73,11 +97,12 @@ class ReCaptchaExtension extends CompilerExtension
 		$initialize = $class->methods['initialize'];
 		$initialize->addBody('$self = $this;
 Nette\Forms\Container::extensionMethod(\'addReCaptcha\', function (Nette\Forms\Container $container, $name, $label = NULL) use ($self) {
-	$container[$name] = new lookyman\ReCaptcha\Forms\Controls\ReCaptchaControl($self->getService(?)->getSiteKey(), $label);
-	$container[$name]->addRule([$self->getService(?), \'validateControl\'], $self->getService(?)->getErrorMessage());
+	$conf = $self->getService(?);
+	$container[$name] = new lookyman\ReCaptcha\Forms\Controls\ReCaptchaControl($conf->getSiteKey(), $conf->getTheme(), $conf->getType(), $conf->getSize(), $label);
+	$container[$name]->addRule([$self->getService(?), \'validateControl\'], $conf->getErrorMessage());
 	return $container[$name];
 });',
-			[$this->prefix('config'), $this->prefix('validator'), $this->prefix('config')]
+			[$this->prefix('config'), $this->prefix('validator')]
 		);
 	}
 

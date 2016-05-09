@@ -36,26 +36,44 @@ class Config extends Object
 	/** @var bool */
 	private $validateRemoteIp;
 
+	/** @var string */
+	private $theme;
+
+	/** @var string */
+	private $type;
+
+	/** @var string */
+	private $size;
+
 	/**
 	 * @param string $siteKey
 	 * @param string $secretKey
 	 * @param string $verificationUrl
 	 * @param string $errorMessage
 	 * @param bool $validateRemoteIp
+	 * @param string $theme
+	 * @param string $type
+	 * @param string $size
 	 */
-	public function __construct($siteKey, $secretKey, $verificationUrl, $errorMessage, $validateRemoteIp)
+	public function __construct($siteKey, $secretKey, $verificationUrl, $errorMessage, $validateRemoteIp, $theme, $type, $size)
 	{
 		Validators::assert($siteKey, 'string', 'siteKey');
 		Validators::assert($secretKey, 'string', 'secretKey');
 		Validators::assert($verificationUrl, 'string', 'verificationUrl');
 		Validators::assert($errorMessage, 'string', 'errorMessage');
 		Validators::assert($validateRemoteIp, 'bool', 'validateRemoteIp');
+		Validators::assert($theme, 'string', 'theme');
+		Validators::assert($type, 'string', 'type');
+		Validators::assert($size, 'string', 'size');
 
 		$this->siteKey = $siteKey;
 		$this->secretKey = $secretKey;
 		$this->verificationUrl = $verificationUrl;
 		$this->errorMessage = $errorMessage;
 		$this->validateRemoteIp = $validateRemoteIp;
+		$this->theme = $theme;
+		$this->type = $type;
+		$this->size = $size;
 	}
 
 	/**
@@ -96,6 +114,30 @@ class Config extends Object
 	public function getValidateRemoteIp()
 	{
 		return $this->validateRemoteIp;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTheme()
+	{
+		return $this->theme;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSize()
+	{
+		return $this->size;
 	}
 
 }

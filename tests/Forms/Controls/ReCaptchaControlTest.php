@@ -24,8 +24,8 @@ class ReCaptchaControlTest extends \PHPUnit_Framework_TestCase
 	public function testGetControl()
 	{
 		$form = new Form;
-		$form['recaptcha'] = new ReCaptchaControl('a');
-		$this->assertSame('<div class="g-recaptcha" data-sitekey="a" name="recaptcha" id="frm-recaptcha"></div>', (string) $form['recaptcha']->getControl());
+		$form['recaptcha'] = new ReCaptchaControl('a', 'b', 'c', 'd');
+		$this->assertSame('<div class="g-recaptcha" data-sitekey="a" data-theme="b" data-type="c" data-size="d" name="recaptcha" id="frm-recaptcha"></div>', (string) $form['recaptcha']->getControl());
 	}
 
 	public function testLoadHttpData()
@@ -35,7 +35,7 @@ class ReCaptchaControlTest extends \PHPUnit_Framework_TestCase
 		$_FILES = [];
 
 		$form = new Form;
-		$form['recaptcha'] = new ReCaptchaControl('');
+		$form['recaptcha'] = new ReCaptchaControl('', '', '', '');
 		$this->assertSame('a', $form['recaptcha']->getValue());
 	}
 
@@ -46,7 +46,7 @@ class ReCaptchaControlTest extends \PHPUnit_Framework_TestCase
 		$_FILES = [];
 
 		$form = new Form;
-		$form['recaptcha'] = new ReCaptchaControl('');
+		$form['recaptcha'] = new ReCaptchaControl('', '', '', '');
 		$this->assertSame([], $form->getValues(TRUE));
 	}
 
