@@ -41,24 +41,33 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 				'verificationUrl' => 'c',
 				'errorMessage' => 'd',
 				'client' => [],
+				'theme' => 'e',
+				'type' => 'f',
+				'size' => 'g',
 			],
 		]));
 
-		$this->assertInstanceOf(Config::class, $config = $container->getByType(Config::class));
+		$config = $container->getService('recaptcha.config');
+		$this->assertInstanceOf(Config::class, $config);
 
 		$this->assertSame('a', $config->getSiteKey());
 		$this->assertSame('b', $config->getSecretKey());
 		$this->assertSame('c', $config->getVerificationUrl());
 		$this->assertSame('d', $config->getErrorMessage());
+		$this->assertSame('e', $config->getTheme());
+		$this->assertSame('f', $config->getType());
+		$this->assertSame('g', $config->getSize());
 
-		$this->assertInstanceOf(GuzzleClient::class, $client = $container->getByType(IClient::class));
+		$client = $container->getService('recaptcha.client');
+		$this->assertInstanceOf(GuzzleClient::class, $client);
 
 		$ref = new \ReflectionClass($client);
 		$prop = $ref->getProperty('client');
 		$prop->setAccessible(TRUE);
 		$this->assertInstanceOf(Client::class, $prop->getValue($client));
 
-		$this->assertInstanceOf(Validator::class, $validator = $container->getByType(Validator::class));
+		$validator = $container->getService('recaptcha.validator');
+		$this->assertInstanceOf(Validator::class, $validator);
 
 		$ref = new \ReflectionClass($validator);
 		$prop = $ref->getProperty('config');
@@ -113,6 +122,21 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 				AssertionException::class,
 				'The item \'validateRemoteIp\' in array expects to be bool, integer given.',
 			],
+			[
+				['recaptcha' => ['theme' => TRUE]],
+				AssertionException::class,
+				'The item \'theme\' in array expects to be string, boolean given.',
+			],
+			[
+				['recaptcha' => ['type' => TRUE]],
+				AssertionException::class,
+				'The item \'type\' in array expects to be string, boolean given.',
+			],
+			[
+				['recaptcha' => ['size' => TRUE]],
+				AssertionException::class,
+				'The item \'size\' in array expects to be string, boolean given.',
+			],
 		];
 	}
 
@@ -127,8 +151,9 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame('$self = $this;
 Nette\Forms\Container::extensionMethod(\'addReCaptcha\', function (Nette\Forms\Container $container, $name, $label = NULL) use ($self) {
-	$container[$name] = new lookyman\ReCaptcha\Forms\Controls\ReCaptchaControl($self->getService(\'recaptcha.config\')->getSiteKey(), $label);
-	$container[$name]->addRule([$self->getService(\'recaptcha.validator\'), \'validateControl\'], $self->getService(\'recaptcha.config\')->getErrorMessage());
+	$conf = $self->getService(\'recaptcha.config\');
+	$container[$name] = new lookyman\ReCaptcha\Forms\Controls\ReCaptchaControl($conf->getSiteKey(), $conf->getTheme(), $conf->getType(), $conf->getSize(), $label);
+	$container[$name]->addRule([$self->getService(\'recaptcha.validator\'), \'validateControl\'], $conf->getErrorMessage());
 	return $container[$name];
 });
 ', $initialize->getBody());

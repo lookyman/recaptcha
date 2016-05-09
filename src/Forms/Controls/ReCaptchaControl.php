@@ -25,17 +25,34 @@ class ReCaptchaControl extends BaseControl
 	/** @var string */
 	private $siteKey;
 
+	/** @var string */
+	private $theme;
+
+	/** @var string */
+	private $type;
+
+	/** @var string */
+	private $size;
+
 	/**
 	 * @param string $siteKey
+	 * @param string $theme
 	 * @param string|NULL $caption
 	 */
-	public function __construct($siteKey, $caption = NULL)
+	public function __construct($siteKey, $theme, $type, $size, $caption = NULL)
 	{
 		parent::__construct($caption);
 		$this->siteKey = $siteKey;
+		$this->theme = $theme;
+		$this->type = $type;
+		$this->size = $size;
+		
 		$this->control = Html::el('div')->addAttributes([
 			'class' => 'g-recaptcha',
 			'data-sitekey' => $this->siteKey,
+			'data-theme' => $this->theme,
+			'data-type' => $this->type,
+			'data-size' => $this->size,
 		]);
 		$this->setOmitted();
 	}
