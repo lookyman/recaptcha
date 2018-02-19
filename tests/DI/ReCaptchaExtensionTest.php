@@ -40,6 +40,7 @@ class ReCaptchaExtensionTest extends \PHPUnit_Framework_TestCase
 				'secretKey' => 'b',
 				'verificationUrl' => 'c',
 				'errorMessage' => 'd',
+				'validateRemoteIp' => FALSE,
 				'client' => [],
 				'theme' => 'e',
 				'type' => 'f',
@@ -166,10 +167,10 @@ Nette\Forms\Container::extensionMethod(\'addReCaptcha\', function (Nette\Forms\C
 	private function createContainer(array $config)
 	{
 		$loader = new ContainerLoader(TEMP_DIR, TRUE);
-		$class = $loader->load($config, function (Compiler $compiler) use ($config) {
+		$class = $loader->load(function (Compiler $compiler) use ($config) {
 			$compiler->addExtension('recaptcha', new ReCaptchaExtension);
 			$compiler->addConfig($config);
-		});
+		}, $config);
 		$container = new $class;
 		$container->initialize();
 		return $container;
