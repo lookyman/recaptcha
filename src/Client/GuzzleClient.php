@@ -11,15 +11,17 @@
 namespace lookyman\ReCaptcha\Client;
 
 use GuzzleHttp\Client;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Guzzle client implementation of IClient interface.
  *
  * @author Lukáš Unger <looky.msc@gmail.com>
  */
-class GuzzleClient extends Object implements IClient
+class GuzzleClient implements IClient
 {
+
+	use SmartObject;
 
 	/** @var \GuzzleHttp\Client */
 	private $client;
