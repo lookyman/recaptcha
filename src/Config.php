@@ -10,7 +10,7 @@
 
 namespace lookyman\ReCaptcha;
 
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Validators;
 
 /**
@@ -18,8 +18,10 @@ use Nette\Utils\Validators;
  *
  * @author Lukáš Unger <looky.msc@gmail.com>
  */
-class Config extends Object
+class Config
 {
+
+	use SmartObject;
 
 	/** @var string */
 	private $siteKey;

@@ -15,7 +15,7 @@ use lookyman\ReCaptcha\Exception\BadResponseException;
 use lookyman\ReCaptcha\Exception\ClientException;
 use lookyman\ReCaptcha\Forms\Controls\ReCaptchaControl;
 use Nette\Http\IRequest;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Json;
 
 /**
@@ -23,8 +23,10 @@ use Nette\Utils\Json;
  *
  * @author Lukáš Unger <looky.msc@gmail.com>
  */
-class Validator extends Object
+class Validator
 {
+
+	use SmartObject;
 
 	/** @var \lookyman\ReCaptcha\Config */
 	private $config;
